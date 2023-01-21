@@ -54,8 +54,14 @@ struct Flag_methods
         end    
     end
 
+    ## commmits
     def commit(message : String)
         system("git commit -m \"#{message}\"")
+    end
+    
+    def amend(message : String)
+        system("git commit --amend -m \"#{message}\"")
+        
     end
 
     ## push/pull
@@ -77,6 +83,7 @@ FL = Flag_methods.new
 
 ## Define variables for the flags
 git_message : String
+message_amend : String
 
 option_parser = OptionParser.parse do |parser|
 
@@ -103,12 +110,18 @@ option_parser = OptionParser.parse do |parser|
         exit
     end
 
+    parser.on "-A message", "--amend=message", "Amends git commit" do |message|
+        message_amend = message
+        FL.amend(message_amend)
+        exit
+    end
+
     parser.on "-p", "--push", "Push staged code to git repository" do
         FL.push()
         exit
     end
 
-    parser.on "-P", "--force-push", "Force push code to a git repository" do
+    parser.on "-f", "--force-push", "Force push code to a git repository" do
         FL.force_push()
         exit
     end
