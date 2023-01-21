@@ -4,18 +4,54 @@
 require "option_parser"
 
 struct Flag_methods
-
+    ## initicalize git repo
     def init
         system("git init")
+    end
+    
+    ## add git user info
+    def user
+        puts "Do you want to add user config info to git?"
+        print "[Y] Yes [N] No [q] Quit : "
+        user_input = gets
+
+        case user_input
+        when "y", "Y"
+            print "User name : "
+            user_name = gets
+            print "User email : "
+            user_email = gets
+
+            system("git cofig --global user.name \"#{user_name}\"")
+            system("git cofig --global user.email \"#{user_email}\"")
+        when "q", "Q"
+            exit
+        else
+            exit
+        end
     end
 
     ## add directories functions
     def add
+        ## get user input
+        puts "Do you want to add a specific file directory? "
+        print "[Y] Specify file [N] Add the whole directory [q] Don't add files : "
+        user_input = gets
         
-        ## if the use w
-        system("git add .")
+        ## if the user wants add the whole directory
+        case user_input
+        when "y", "Y"
+            print "File name : "
+            path = gets
 
-        system("git add .\/#{dir}")
+            system("git add .\/#{path}")
+        when "n", "N"
+            system("git add .")
+        when "q", "Q"
+            exit
+        else
+            system("git add .")
+        end    
     end
 
     def commit(message : String)
@@ -82,8 +118,13 @@ option_parser = OptionParser.parse do |parser|
         exit
     end
 
-    parser.on "init", "", "Initalize git in repository" do
+    parser.on "", "--init", "Initalize git in repository" do
         FL.init()
+        exit
+    end
+
+    parser.on "", "--userconfig", "Add user config info \ni.e. \"Harold Mason\", \"horald.m@companysite.com\" " do
+        FL.user()
         exit
     end
 
