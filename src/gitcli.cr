@@ -1,7 +1,12 @@
-## @FileName : Gcli 
+require "option_parser"
+
+# TODO: Write documentation for `Gitcli`
+module Gitcli
+  VERSION = "0.1.0"
+
+  ## @FileName : Gcli 
 
 ## this program to make git a little but easier
-require "option_parser"
 
 struct Flag_methods
     ## initicalize git repo
@@ -55,6 +60,10 @@ struct Flag_methods
     end
 
     ## commmits
+    def commit
+        system("git commit --allow-empty")
+    end
+
     def commit(message : String)
         system("git commit -m \"#{message}\"")
     end
@@ -84,6 +93,7 @@ FL = Flag_methods.new
 ## Define variables for the flags
 git_message : String
 message_amend : String
+init = false
 
 option_parser = OptionParser.parse do |parser|
 
@@ -94,51 +104,67 @@ option_parser = OptionParser.parse do |parser|
         exit
     end
 
-    parser.on "-h", "--help", "Show Help" do 
+    parser.on "help", "Show Help" do 
         puts parser
-        exit
+        exit()
     end
 
-    parser.on  "-a", "--add", "Stage code to be add to git repository" do
+    parser.on  "add", "Stage code to be add to git repository" do
         FL.add()
         exit
     end
 
-    parser.on "-c message", "--commit=message", "Commit code with message" do |message|
-        git_message = message
-        FL.commit(git_message) 
+    parser.on "commit", "Commit code" do
+        FL.commit()
+        parser.on "-m message", "--message=message", "Commit code with a message" do |message|
+            git_message = message
+            FL.commit(git_message)
+            exit
+        end
+        parser.on "-A message", "--amend=message", "Amends git commit" do |message|
+            message_amend = message
+            FL.amend(message_amend)
+            exit
+        end
         exit
     end
 
-    parser.on "-A message", "--amend=message", "Amends git commit" do |message|
-        message_amend = message
-        FL.amend(message_amend)
-        exit
-    end
-
-    parser.on "-p", "--push", "Push staged code to git repository" do
+    parser.on "push", "Push staged code to git repository" do
+        push =  true
         FL.push()
+        parser.on "-f", "--force-push", "Force push code to a git repository" do
+            FL.force_push()
+            exit
+        end
         exit
     end
 
-    parser.on "-f", "--force-push", "Force push code to a git repository" do
-        FL.force_push()
-        exit
-    end
 
-    parser.on "-pl", "--pull", "Pull code from remote git repository" do
+    parser.on "pull", "Pull code from remote git repository" do
         FL.pull()
         exit
     end
 
-    parser.on "", "--init", "Initalize git in repository" do
+    parser.on "init", "Initalize git in repository" do
+        init = true
         FL.init()
         exit
     end
 
-    parser.on "", "--userconfig", "Add user config info \ni.e. \"Harold Mason\", \"horald.m@companysite.com\" " do
+    parser.on "user-config", "Add user config info \ni.e. \"Harold Mason\", \"horald.m@companysite.com\" \n" do
         FL.user()
         exit
     end
 
+    parser.invalid_option do |flag|
+        STDERR.puts "\nERROR: #{flag} is not a valid option."
+        STDERR.puts parser
+        exit(1)
+    end
+
 end
+
+option_parser.parse
+
+end
+

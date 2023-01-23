@@ -1,0 +1,13 @@
+name: gitcli
+version: 0.1.0
+
+authors:
+  - Christian Alvarez <alvarez.christian46@gmail.com>
+
+targets:
+  gitcli:
+    main: src/gitcli.cr
+
+crystal: 1.7.1
+
+license: MIT
