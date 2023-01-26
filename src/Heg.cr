@@ -1,12 +1,10 @@
 require "option_parser"
 
-# TODO: Write documentation for `Gitcli`
-module Gitcli
+module Heg
   VERSION = "0.1.0"
+  App_Name = "Heg"
 
-  ## @FileName : Gcli 
-
-## this program to make git a little but easier
+  ## @FileName : Heg ## this program to make git a little but easier
 
 struct Flag_methods
     ## initicalize git repo
@@ -97,15 +95,19 @@ init = false
 
 option_parser = OptionParser.parse do |parser|
 
-    parser.banner = "GitC v.0.1 alpha \n"
+    parser.banner = "Heg #{VERSION} Aphla\n"
 
     parser.on "-v", "--version", "Show verson" do
-    puts "GitC version 0.1 alpha \n\nUsing Crystal Lang version 1.7.0"
+        puts "Heg #{VERSION} Alpha \n\nUsing Crystal Lang version 1.7.0"
         exit
     end
 
     parser.on "help", "Show Help" do 
-        puts parser
+        STDERR.puts parser
+        parser.on "-h", "--help", "Show help" do
+            STDERR.puts parser
+            exit
+        end
         exit()
     end
 
