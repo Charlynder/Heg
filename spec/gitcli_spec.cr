@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Gitcli do
+describe Heg do
   # TODO: Write tests
 
   it "works" do

@@ -1,2 +1,2 @@
 require "spec"
-require "../src/gitcli"
+require "../src/Heg"
