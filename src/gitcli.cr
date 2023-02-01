@@ -85,6 +85,10 @@ struct Flag_methods
     def force_push()
         system("git push --force")
     end
+
+    def branch
+        system("git sbranch")
+    end
 end
 
 ## Create Flag_methods object
